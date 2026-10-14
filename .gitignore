@@ -22,3 +22,33 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 replay_pid*
+
+
+# 1. 编译产物 (必须)
+target/
+build/
+!.mvn/wrapper/maven-wrapper.jar
+!&zwnj;**/src/main/**&zwnj;/target/
+!&zwnj;**/src/test/**&zwnj;/target/
+
+# 2. IDEA 配置 (必须，防止冲突)
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# 3. 敏感配置与日志 (安全红线)
+*.log
+logs/
+application-local.yml
+application-local.properties
+.env
+.env.*.local
+*.key
+*.pem
+
+# 4. 系统临时文件 (保持整洁)
+.DS_Store
+Thumbs.db
+*.tmp
+*.swp
