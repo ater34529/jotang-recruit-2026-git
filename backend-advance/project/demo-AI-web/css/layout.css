@@ -1,0 +1,480 @@
+/* 页面骨架：三栏控制台 + 移动端抽屉。 */
+.ambient {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.ambient-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.5;
+}
+
+.ambient-orb-a {
+  top: -18vh;
+  left: 18vw;
+  width: 44vw;
+  height: 44vw;
+  background: radial-gradient(circle, rgba(124, 92, 255, 0.32), transparent 65%);
+}
+
+.ambient-orb-b {
+  right: -12vw;
+  bottom: -24vh;
+  width: 42vw;
+  height: 42vw;
+  background: radial-gradient(circle, rgba(53, 214, 193, 0.18), transparent 65%);
+}
+
+.ambient-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(148, 167, 204, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 167, 204, 0.045) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse 80% 65% at 50% 0%, #000 0%, transparent 78%);
+}
+
+html[data-theme="light"] .ambient-orb {
+  opacity: 0.35;
+}
+
+html[data-theme="light"] .ambient-grid {
+  background-image:
+    linear-gradient(rgba(25, 34, 56, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(25, 34, 56, 0.04) 1px, transparent 1px);
+}
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: rgba(4, 7, 13, 0.62);
+  backdrop-filter: blur(4px);
+}
+
+.app-shell {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: var(--sidebar-w) minmax(0, 1fr) var(--insights-w);
+  gap: 14px;
+  height: 100vh;
+  height: 100dvh;
+  padding: 14px;
+}
+
+/* ---------------- 侧边栏 ---------------- */
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  padding: 16px 13px 13px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  background:
+    linear-gradient(165deg, rgba(124, 92, 255, 0.07), transparent 42%),
+    var(--surface);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 2px 5px 16px;
+}
+
+.brand-mark {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  flex: none;
+  border-radius: 12px;
+  background: var(--gradient-brand);
+  color: #fff;
+  box-shadow: var(--shadow-glow);
+}
+
+.brand-mark .icon {
+  width: 20px;
+  height: 20px;
+}
+
+.brand-copy {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.35;
+}
+
+.brand-copy strong {
+  font-size: 15px;
+  letter-spacing: -0.01em;
+}
+
+.brand-copy span {
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.sidebar-close {
+  display: none;
+  margin-left: auto;
+}
+
+.sidebar-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 7px 8px;
+  color: var(--faint);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.sidebar-count {
+  display: inline-grid;
+  place-items: center;
+  min-width: 22px;
+  height: 19px;
+  padding: 0 6px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  background: var(--surface-2);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0;
+}
+
+.session-list {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-height: 0;
+  margin: 0 -4px;
+  padding: 0 4px 4px;
+  overflow-y: auto;
+}
+
+.sidebar-spacer {
+  flex: 1;
+  min-height: 12px;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.sidebar-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding-top: 12px;
+}
+
+/* ---------------- 主区域 ---------------- */
+.main {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  background:
+    radial-gradient(ellipse 70% 38% at 50% -10%, rgba(124, 92, 255, 0.1), transparent 70%),
+    var(--surface);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: none;
+  height: var(--header-h);
+  padding: 0 18px 0 22px;
+  border-bottom: 1px solid var(--border);
+  background: color-mix(in srgb, var(--surface) 78%, transparent);
+  backdrop-filter: blur(14px);
+}
+
+.topbar-title {
+  min-width: 0;
+  flex: 1;
+}
+
+.topbar-title h1 {
+  overflow: hidden;
+  font-size: 15px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.topbar-title p {
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 11.5px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+}
+
+.chat-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  overscroll-behavior: contain;
+}
+
+.welcome {
+  width: 100%;
+  max-width: 830px;
+  margin: 0 auto;
+  padding: 54px 30px 20px;
+}
+
+.messages {
+  width: 100%;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 10px 30px 28px;
+}
+
+.chat-end {
+  height: 1px;
+}
+
+.composer-wrap {
+  flex: none;
+  padding: 8px 26px 16px;
+  background: linear-gradient(to top, var(--surface) 62%, transparent);
+}
+
+/* ---------------- 右侧洞察面板 ---------------- */
+.insights {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  background:
+    var(--gradient-panel),
+    var(--surface);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+}
+
+.insights-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex: none;
+  padding: 12px 12px 10px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.insights-body {
+  flex: 1;
+  min-height: 0;
+  padding: 14px;
+  overflow-y: auto;
+}
+
+.tab-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  animation: panel-in 240ms var(--ease);
+}
+
+@keyframes panel-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+
+.insights-close {
+  display: none;
+}
+
+/* 宽屏时右侧面板常驻，顶栏按钮不再需要。 */
+@media (min-width: 1181px) {
+  button.insights-toggle,
+  button.insights-close {
+    display: none;
+  }
+}
+
+/*
+ * 这些按钮同时带有 .icon-btn，而 components.css 在 layout.css 之后加载。
+ * 用 button.xxx 提高优先级，避免桌面端把移动端按钮显示出来。
+ */
+@media (min-width: 901px) {
+  button.sidebar-close,
+  button.mobile-only {
+    display: none;
+  }
+}
+
+/* ---------------- 响应式 ---------------- */
+@media (max-width: 1360px) {
+  .app-shell {
+    grid-template-columns: 250px minmax(0, 1fr) 330px;
+    gap: 12px;
+    padding: 12px;
+  }
+
+  .welcome,
+  .messages {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .composer-wrap {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+@media (max-width: 1180px) {
+  .app-shell {
+    grid-template-columns: 260px minmax(0, 1fr);
+  }
+
+  .insights {
+    position: fixed;
+    top: 12px;
+    right: 12px;
+    bottom: 12px;
+    z-index: 60;
+    width: min(380px, calc(100vw - 24px));
+    transform: translateX(calc(100% + 28px));
+    transition: transform 260ms var(--ease);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .insights.is-open {
+    transform: none;
+  }
+
+  .insights-close {
+    display: inline-flex;
+  }
+}
+
+@media (max-width: 900px) {
+  .app-shell {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 8px;
+  }
+
+  .sidebar {
+    position: fixed;
+    top: 8px;
+    bottom: 8px;
+    left: 8px;
+    z-index: 70;
+    width: min(300px, calc(100vw - 34px));
+    transform: translateX(calc(-100% - 28px));
+    transition: transform 260ms var(--ease);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .sidebar.is-open {
+    transform: none;
+  }
+
+  .sidebar-close,
+  .mobile-only {
+    display: inline-flex;
+  }
+
+  .topbar {
+    padding: 0 12px;
+    gap: 8px;
+  }
+
+  .topbar-title h1 {
+    font-size: 14px;
+  }
+
+  .welcome {
+    padding-top: 36px;
+  }
+
+  .insights {
+    top: 8px;
+    right: 8px;
+    bottom: 8px;
+  }
+}
+
+@media (max-width: 640px) {
+  :root {
+    --header-h: 60px;
+  }
+
+  .welcome {
+    padding: 26px 16px 12px;
+  }
+
+  .messages {
+    padding: 6px 14px 20px;
+  }
+
+  .composer-wrap {
+    padding: 6px 12px 10px;
+  }
+
+  .model-chip {
+    display: none;
+  }
+
+  .prompt-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .insights {
+    width: calc(100vw - 16px);
+  }
+}
+
+@media (max-height: 700px) {
+  .welcome {
+    padding-top: 28px;
+  }
+}
+
+

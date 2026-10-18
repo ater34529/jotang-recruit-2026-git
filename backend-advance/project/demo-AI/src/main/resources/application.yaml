@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: demo-AI
+
+  # ===== MySQL：Tool Use 按 ID 查笔记全文，复用之前的 JotangNote 库 =====
+  datasource:
+    url: jdbc:mysql://localhost:3306/JotangNote?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+# ===== 大模型：小米 MiMo（OpenAI 兼容协议）=====
+llm:
+  base-url: https://api.xiaomimimo.com/v1
+  chat-path: /chat/completions
+  model: mimo-v2.6-flash
+  api-key: ${MIMO_API_KEY:sk-your-key-here}
+
+# ===== 会话/循环参数 =====
+chat:
+  max-history-messages: 50
+  max-tool-rounds: 5

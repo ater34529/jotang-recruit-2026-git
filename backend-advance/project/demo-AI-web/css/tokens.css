@@ -1,0 +1,272 @@
+/* 设计令牌：颜色、字体、间距、圆角、阴影与动效。 */
+:root {
+  color-scheme: dark;
+  --font-sans: "Inter", "Segoe UI", "PingFang SC", "Microsoft YaHei", system-ui, -apple-system, sans-serif;
+  --font-mono: "Cascadia Code", "JetBrains Mono", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+
+  --bg: #070a11;
+  --bg-soft: #0a0f1a;
+  --surface: #0d1320;
+  --surface-2: #111a2b;
+  --surface-3: #162135;
+  --surface-hover: #18243a;
+  --border: rgba(148, 167, 204, 0.14);
+  --border-strong: rgba(148, 167, 204, 0.26);
+  --text: #e9edf8;
+  --text-soft: #c3cce0;
+  --muted: #8793ad;
+  --faint: #5d6981;
+
+  --accent: #7c5cff;
+  --accent-strong: #9279ff;
+  --accent-soft: rgba(124, 92, 255, 0.14);
+  --accent-border: rgba(124, 92, 255, 0.38);
+  --teal: #35d6c1;
+  --teal-soft: rgba(53, 214, 193, 0.12);
+  --amber: #ffb547;
+  --amber-soft: rgba(255, 181, 71, 0.12);
+  --danger: #ff647d;
+  --danger-soft: rgba(255, 100, 125, 0.12);
+  --success: #45d69c;
+  --success-soft: rgba(69, 214, 156, 0.12);
+
+  --gradient-brand: linear-gradient(135deg, #8d6bff 0%, #6b5bff 48%, #35d6c1 100%);
+  --gradient-text: linear-gradient(100deg, #b7a5ff 0%, #7c5cff 45%, #45e0cd 100%);
+  --gradient-panel: linear-gradient(160deg, rgba(124, 92, 255, 0.09), rgba(53, 214, 193, 0.035) 55%, transparent);
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.28);
+  --shadow-md: 0 12px 30px rgba(0, 0, 0, 0.28);
+  --shadow-lg: 0 28px 80px rgba(0, 0, 0, 0.45);
+  --shadow-glow: 0 0 0 1px rgba(124, 92, 255, 0.22), 0 18px 48px rgba(124, 92, 255, 0.18);
+
+  --radius-xs: 8px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 26px;
+  --radius-pill: 999px;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 32px;
+  --space-8: 44px;
+
+  --header-h: 68px;
+  --composer-h: 132px;
+  --sidebar-w: 272px;
+  --insights-w: 360px;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --transition: 180ms var(--ease);
+}
+
+html[data-theme="light"] {
+  color-scheme: light;
+  --bg: #eef1f7;
+  --bg-soft: #f4f6fb;
+  --surface: #ffffff;
+  --surface-2: #f7f8fc;
+  --surface-3: #eef1f8;
+  --surface-hover: #f0f2f9;
+  --border: rgba(25, 34, 56, 0.1);
+  --border-strong: rgba(25, 34, 56, 0.2);
+  --text: #151c2e;
+  --text-soft: #35415a;
+  --muted: #5f6b84;
+  --faint: #8a94aa;
+
+  --accent: #6246ea;
+  --accent-strong: #5338db;
+  --accent-soft: rgba(98, 70, 234, 0.09);
+  --accent-border: rgba(98, 70, 234, 0.3);
+  --teal: #0b9e8b;
+  --teal-soft: rgba(11, 158, 139, 0.1);
+  --amber: #b76e00;
+  --amber-soft: rgba(183, 110, 0, 0.1);
+  --danger: #d93a56;
+  --danger-soft: rgba(217, 58, 86, 0.09);
+  --success: #12855f;
+  --success-soft: rgba(18, 133, 95, 0.1);
+
+  --gradient-text: linear-gradient(100deg, #6b4cf0 0%, #6246ea 45%, #0b9e8b 100%);
+  --gradient-panel: linear-gradient(160deg, rgba(98, 70, 234, 0.06), rgba(11, 158, 139, 0.03) 55%, transparent);
+
+  --shadow-sm: 0 1px 2px rgba(23, 32, 54, 0.06);
+  --shadow-md: 0 12px 30px rgba(23, 32, 54, 0.08);
+  --shadow-lg: 0 28px 80px rgba(23, 32, 54, 0.16);
+  --shadow-glow: 0 0 0 1px rgba(98, 70, 234, 0.16), 0 18px 48px rgba(98, 70, 234, 0.12);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow: hidden;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: 0;
+  background: none;
+}
+
+a {
+  color: var(--accent-strong);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+p,
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+}
+
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+}
+
+svg {
+  display: block;
+}
+
+code,
+kbd,
+pre {
+  font-family: var(--font-mono);
+}
+
+kbd {
+  display: inline-block;
+  padding: 1px 6px;
+  border: 1px solid var(--border);
+  border-bottom-color: var(--border-strong);
+  border-radius: 5px;
+  background: var(--surface-2);
+  color: var(--muted);
+  font-size: 10.5px;
+  line-height: 1.5;
+}
+
+::selection {
+  background: rgba(124, 92, 255, 0.35);
+  color: #fff;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* 细滚动条，在深浅主题下都保持存在感 */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border: 2px solid transparent;
+  border-radius: var(--radius-pill);
+  background-clip: padding-box;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--faint);
+  background-clip: padding-box;
+}
+
+.icon {
+  width: 18px;
+  height: 18px;
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.svg-sprite {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+.gradient-text {
+  background: var(--gradient-text);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.mobile-only {
+  display: none;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

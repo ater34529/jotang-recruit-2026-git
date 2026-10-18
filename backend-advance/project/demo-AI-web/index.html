@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Jotang AI 笔记助手：连接 backend-advance/demo-AI 的 Tool Use 对话前端。">
+  <meta name="theme-color" content="#080c14">
+  <title>Jotang AI · 笔记智能助手</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%237c5cff'/%3E%3Cpath d='M32 14l3.5 9.5L45 27l-9.5 3.5L32 40l-3.5-9.5L19 27l9.5-3.5L32 14z' fill='white'/%3E%3C/svg%3E">
+  <script src="js/theme-init.js"></script>
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+  <!-- 图标 sprite：所有按钮与卡片共用，避免外部图标依赖 -->
+  <svg class="svg-sprite" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3l1.9 4.9L18.8 9.8l-4.9 1.9L12 16.6l-1.9-4.9L5.2 9.8l4.9-1.9L12 3z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8L19 15z"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 9.7 9.7 0 0 1-3.8-.8L3 21l1.9-4.8A8.2 8.2 0 0 1 3.6 11.5a8.4 8.4 0 0 1 8.8-8.4 8.4 8.4 0 0 1 8.6 8.4z"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6.5 7l.8 13h9.4l.8-13M10 11v5M14 11v5"/></symbol>
+    <symbol id="i-pencil" viewBox="0 0 24 24"><path d="M4 20h4l11-11a2.1 2.1 0 0 0-3-3L5 17l-1 3z"/><path d="M13.5 6.5l4 4"/></symbol>
+    <symbol id="i-map" viewBox="0 0 24 24"><path d="M9 18l-5 2V6l5-2 6 2 5-2v14l-5 2-6-2z"/><path d="M9 4v14M15 6v14"/></symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-2.8 2.8-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6v.2h-4v-.2a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1L4.2 17l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.6-1H2.8v-4H3a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9L4.2 7 7 4.2l.1.1a1.7 1.7 0 0 0 1.9.3 1.7 1.7 0 0 0 1-1.6v-.2h4V3a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1L19.8 7l-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.6 1h.2v4H21a1.7 1.7 0 0 0-1.6 1z"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5 8.5 8.5 0 1 0 20.5 14.2z"/></symbol>
+    <symbol id="i-send" viewBox="0 0 24 24"><path d="M21 3L10.5 13.5M21 3l-6.5 18-4-8-8-4L21 3z"/></symbol>
+    <symbol id="i-stop" viewBox="0 0 24 24"><rect x="7" y="7" width="10" height="10" rx="1.5" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="11" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h2"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.2 4.2L19 7"/></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0-2.3 6.7M20 4v7h-7"/></symbol>
+    <symbol id="i-database" viewBox="0 0 24 24"><ellipse cx="12" cy="5.5" rx="8" ry="3"/><path d="M4 5.5v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6M4 11.5v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></symbol>
+    <symbol id="i-server" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="6" rx="2"/><rect x="3" y="14" width="18" height="6" rx="2"/><path d="M7 7h.01M7 17h.01M11 7h5M11 17h5"/></symbol>
+    <symbol id="i-cpu" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v2M15 2v2M9 20v2M15 20v2M2 9h2M2 15h2M20 9h2M20 15h2"/></symbol>
+    <symbol id="i-terminal" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 9l3 3-3 3M13 15h4"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 3l9.5 17h-19L12 3z"/><path d="M12 9v5M12 17.5h.01"/></symbol>
+    <symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M14 7l5 5-5 5"/></symbol>
+    <symbol id="i-file" viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6V3z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v5l3.5 2"/></symbol>
+    <symbol id="i-route" viewBox="0 0 24 24"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8.5 6h4a3.5 3.5 0 0 1 3.5 3.5v1A3.5 3.5 0 0 1 12.5 14h-1A3.5 3.5 0 0 0 8 17.5v.5"/><path d="M6 8.5V18"/></symbol>
+    <symbol id="i-code" viewBox="0 0 24 24"><path d="M8 8l-4 4 4 4M16 8l4 4-4 4M14 5l-4 14"/></symbol>
+    <symbol id="i-external" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></symbol>
+  </svg>
+
+  <div class="ambient" aria-hidden="true">
+    <span class="ambient-orb ambient-orb-a"></span>
+    <span class="ambient-orb ambient-orb-b"></span>
+    <span class="ambient-grid"></span>
+  </div>
+
+  <div class="backdrop" id="backdrop" hidden></div>
+
+  <div class="app-shell" id="appShell">
+    <!-- ================= 侧边栏 ================= -->
+    <aside class="sidebar" id="sidebar" aria-label="会话侧边栏">
+      <div class="brand">
+        <div class="brand-mark"><svg class="icon" aria-hidden="true"><use href="#i-spark"></use></svg></div>
+        <div class="brand-copy">
+          <strong>Jotang AI</strong>
+          <span>Notes Agent Console</span>
+        </div>
+        <button class="icon-btn sidebar-close" id="closeSidebarBtn" type="button" aria-label="关闭侧边栏">
+          <svg class="icon" aria-hidden="true"><use href="#i-close"></use></svg>
+        </button>
+      </div>
+
+      <button class="new-chat-btn" id="newChatBtn" type="button">
+        <span class="new-chat-icon"><svg class="icon" aria-hidden="true"><use href="#i-plus"></use></svg></span>
+        <span>新建对话</span>
+        <kbd>Alt N</kbd>
+      </button>
+
+      <div class="sidebar-section-head">
+        <span>最近对话</span>
+        <span class="sidebar-count" id="sessionCount">0</span>
+      </div>
+
+      <nav class="session-list" id="sessionList" aria-label="历史会话"></nav>
+
+      <div class="sidebar-spacer"></div>
+
+      <div class="sidebar-nav">
+        <button class="sidebar-link" id="openMapBtn" type="button">
+          <svg class="icon" aria-hidden="true"><use href="#i-map"></use></svg>
+          <span>三份 README · 学习地图</span>
+          <svg class="icon sidebar-link-arrow" aria-hidden="true"><use href="#i-arrow-right"></use></svg>
+        </button>
+        <button class="sidebar-link" id="openSettingsBtn" type="button">
+          <svg class="icon" aria-hidden="true"><use href="#i-settings"></use></svg>
+          <span>连接与偏好设置</span>
+          <svg class="icon sidebar-link-arrow" aria-hidden="true"><use href="#i-arrow-right"></use></svg>
+        </button>
+      </div>
+
+      <button class="service-card" id="serviceCard" type="button" title="点击重新检测 demo-AI 后端">
+        <span class="status-dot" id="sidebarStatusDot" data-state="checking"></span>
+        <span class="service-copy">
+          <strong id="serviceLabel">正在检测服务</strong>
+          <small id="serviceDetail">demo-AI · POST /chat</small>
+        </span>
+        <svg class="icon service-refresh" aria-hidden="true"><use href="#i-refresh"></use></svg>
+      </button>
+
+      <div class="sidebar-footer">
+        <button class="theme-toggle" id="themeBtn" type="button" aria-label="切换深色/浅色主题" aria-pressed="false">
+          <span class="theme-toggle-track">
+            <span class="theme-toggle-thumb">
+              <svg class="icon theme-icon-moon" aria-hidden="true"><use href="#i-moon"></use></svg>
+              <svg class="icon theme-icon-sun" aria-hidden="true"><use href="#i-sun"></use></svg>
+            </span>
+          </span>
+          <span class="theme-toggle-label">深色模式</span>
+        </button>
+        <span class="local-badge" title="会话保存在浏览器 localStorage"><svg class="icon" aria-hidden="true"><use href="#i-database"></use></svg>Local</span>
+      </div>
+    </aside>
+
+    <!-- ================= 主对话区 ================= -->
+    <main class="main" aria-label="AI 对话">
+      <header class="topbar">
+        <button class="icon-btn mobile-only" id="menuBtn" type="button" aria-label="打开会话列表">
+          <svg class="icon" aria-hidden="true"><use href="#i-menu"></use></svg>
+        </button>
+        <div class="topbar-title">
+          <h1 id="sessionTitle">新对话</h1>
+          <p id="sessionMeta">准备开始 · 会话保存在本机</p>
+        </div>
+        <div class="topbar-actions">
+          <button class="status-chip" id="statusChip" type="button" data-state="checking" title="点击重新检测后端连接">
+            <span class="status-dot" data-state="checking"></span>
+            <span id="statusChipText">检测中</span>
+          </button>
+          <span class="model-chip" title="模型由后端 application.yaml 配置">
+            <svg class="icon" aria-hidden="true"><use href="#i-cpu"></use></svg>
+            <span id="modelLabel">mimo-v2.6-flash</span>
+          </span>
+          <button class="icon-btn insights-toggle" id="insightsBtn" type="button" aria-label="打开 Agent 运行轨迹" aria-expanded="false">
+            <svg class="icon" aria-hidden="true"><use href="#i-route"></use></svg>
+          </button>
+        </div>
+      </header>
+
+      <div class="chat-scroll" id="chatScroll" tabindex="-1">
+        <section class="welcome" id="welcome">
+          <div class="welcome-inner">
+            <span class="eyebrow"><span class="eyebrow-dot"></span>BACKEND · ADVANCE / TOOL USE</span>
+            <h2 class="welcome-title">把笔记库，<br><span class="gradient-text">变成一个会思考的助手。</span></h2>
+            <p class="welcome-lead">
+              这个界面连接 <code>demo-AI</code> 的 <code>POST /chat</code>。你的问题会进入 Tool Use 循环，
+              由大模型自主决定是否调用 <code>get_note_by_id</code>，再从 MySQL 取出笔记并组织回答。
+            </p>
+
+            <div class="connection-banner" id="connectionBanner" hidden>
+              <span class="connection-banner-icon"><svg class="icon" aria-hidden="true"><use href="#i-alert"></use></svg></span>
+              <div class="connection-banner-copy">
+                <strong>还没有连上 demo-AI</strong>
+                <p id="connectionBannerText">请确认后端与 Python 代理都已启动。</p>
+              </div>
+              <button class="btn btn-ghost btn-sm" id="retryHealthBtn" type="button">重新检测</button>
+            </div>
+
+            <div class="prompt-section">
+              <div class="section-label"><span>试着这样问</span><span id="promptHint">点击直接发送</span></div>
+              <div class="prompt-grid" id="promptGrid"></div>
+            </div>
+
+            <div class="tech-strip" aria-label="技术栈">
+              <span><svg class="icon" aria-hidden="true"><use href="#i-server"></use></svg>Spring Boot 4.1.1</span>
+              <span><svg class="icon" aria-hidden="true"><use href="#i-cpu"></use></svg>MiMo Chat</span>
+              <span><svg class="icon" aria-hidden="true"><use href="#i-database"></use></svg>MySQL</span>
+              <span><svg class="icon" aria-hidden="true"><use href="#i-code"></use></svg>Tool Use</span>
+            </div>
+          </div>
+        </section>
+
+        <div class="messages" id="messages" aria-live="polite" aria-relevant="additions text"></div>
+        <div class="chat-end" id="chatEnd" aria-hidden="true"></div>
+      </div>
+
+      <div class="composer-wrap">
+        <form class="composer" id="composer" autocomplete="off">
+          <div class="composer-main">
+            <textarea id="input" rows="1" maxlength="4000" placeholder="问问笔记库里的内容，例如：帮我看看 2 号笔记写了什么…" aria-label="输入消息"></textarea>
+            <button class="send-btn" id="sendBtn" type="submit" aria-label="发送消息">
+              <svg class="icon send-icon" aria-hidden="true"><use href="#i-send"></use></svg>
+              <svg class="icon stop-icon" aria-hidden="true"><use href="#i-stop"></use></svg>
+            </button>
+          </div>
+          <div class="composer-foot">
+            <span class="composer-hint"><kbd>Enter</kbd> 发送 <span class="dot-sep">·</span> <kbd>Shift</kbd> + <kbd>Enter</kbd> 换行</span>
+            <span class="char-count" id="charCount">0 / 4000</span>
+          </div>
+        </form>
+        <p class="disclaimer">AI 也可能出错，重要内容请核对。会话只保存在本机浏览器，清除站点数据会丢失。</p>
+      </div>
+    </main>
+
+    <!-- ================= 右侧运行轨迹 / 学习地图 ================= -->
+    <aside class="insights" id="insights" aria-label="运行轨迹与学习地图">
+      <div class="insights-head">
+        <div class="tabs" role="tablist" aria-label="右侧面板">
+          <button class="tab is-active" id="tabPipeline" type="button" role="tab" aria-selected="true" data-tab="pipeline">运行轨迹</button>
+          <button class="tab" id="tabMap" type="button" role="tab" aria-selected="false" data-tab="map">学习地图</button>
+        </div>
+        <button class="icon-btn insights-close" id="closeInsightsBtn" type="button" aria-label="关闭右侧面板">
+          <svg class="icon" aria-hidden="true"><use href="#i-close"></use></svg>
+        </button>
+      </div>
+
+      <div class="insights-body">
+        <section class="tab-panel" id="panelPipeline" role="tabpanel" aria-labelledby="tabPipeline">
+          <div class="panel-card">
+            <div class="panel-card-head">
+              <div>
+                <span class="panel-kicker">AGENT LOOP</span>
+                <h2>一次提问之后</h2>
+              </div>
+              <span class="pipeline-state" id="pipelineState" data-state="idle">待命</span>
+            </div>
+            <ol class="pipeline" id="workflowList"></ol>
+            <p class="panel-note">
+              <svg class="icon" aria-hidden="true"><use href="#i-code"></use></svg>
+              是否调用工具由模型决定；后端最多进行 5 轮工具调用。
+            </p>
+          </div>
+
+          <div class="metric-row">
+            <div class="metric">
+              <span>当前消息</span>
+              <strong id="metricMessages">0</strong>
+            </div>
+            <div class="metric">
+              <span>最近耗时</span>
+              <strong id="metricLatency">—</strong>
+            </div>
+            <div class="metric">
+              <span>连接模式</span>
+              <strong id="metricMode">代理</strong>
+            </div>
+          </div>
+
+          <div class="panel-card inspector">
+            <div class="panel-card-head inspector-head">
+              <div>
+                <span class="panel-kicker">HTTP SNAPSHOT</span>
+                <h2>接口快照</h2>
+              </div>
+              <button class="icon-btn icon-btn-sm" id="copyInspectorBtn" type="button" aria-label="复制当前快照" title="复制当前快照">
+                <svg class="icon" aria-hidden="true"><use href="#i-copy"></use></svg>
+              </button>
+            </div>
+            <div class="mini-tabs" role="tablist" aria-label="接口快照类型">
+              <button class="mini-tab is-active" id="inspectorRequestTab" type="button" role="tab" aria-selected="true" data-inspector="request">Request</button>
+              <button class="mini-tab" id="inspectorResponseTab" type="button" role="tab" aria-selected="false" data-inspector="response">Response</button>
+            </div>
+            <div class="inspector-meta" id="inspectorMeta">等待第一次请求</div>
+            <pre class="code-block" id="inspectorPre" tabindex="0"><code>{
+  "sessionId": "…",
+  "message": "帮我看看 1 号笔记写了什么"
+}</code></pre>
+            <p class="panel-note subtle">快照仅记录最后一次请求；工具调用细节保留在后端会话记忆中。</p>
+          </div>
+        </section>
+
+        <section class="tab-panel" id="panelMap" role="tabpanel" aria-labelledby="tabMap" hidden>
+          <div class="map-intro">
+            <span class="panel-kicker">LEARNING PATH</span>
+            <h2>三份 README，<br>拼成一条后端路线。</h2>
+            <p>从 HTTP 请求出发，经过数据库、缓存与消息队列，最后把大模型接上工具。这个前端只负责最后一站。</p>
+          </div>
+          <div class="learning-map" id="learningMap"></div>
+        </section>
+      </div>
+    </aside>
+
+
+  </div>
+
+  <!-- ================= 设置弹窗 ================= -->
+  <dialog class="modal" id="settingsDialog" aria-labelledby="settingsTitle">
+    <form class="modal-card" id="settingsForm" novalidate>
+      <header class="modal-head">
+        <div>
+          <span class="panel-kicker">CONNECTION</span>
+          <h2 id="settingsTitle">连接与偏好设置</h2>
+          <p>默认通过本地 Python 代理访问 demo-AI，无需修改后端 CORS。</p>
+        </div>
+        <button class="icon-btn" type="button" data-close-dialog aria-label="关闭设置">
+          <svg class="icon" aria-hidden="true"><use href="#i-close"></use></svg>
+        </button>
+      </header>
+
+      <div class="modal-body">
+        <label class="field">
+          <span class="field-label">API 地址</span>
+          <input id="settingApiBase" type="url" inputmode="url" placeholder="留空 = 使用本地代理 /chat" spellcheck="false">
+          <span class="field-hint">留空时请求同源的 <code>/chat</code>，由 <code>server.py</code> 转发到 <code>http://localhost:8080</code>。填写 <code>http://localhost:8080</code> 则浏览器直连，需要后端开启 CORS。</span>
+        </label>
+
+        <div class="field-row">
+          <label class="field">
+            <span class="field-label">对话接口路径</span>
+            <input id="settingChatPath" type="text" placeholder="/chat" spellcheck="false">
+          </label>
+          <label class="field">
+            <span class="field-label">请求超时（秒）</span>
+            <input id="settingTimeout" type="number" min="60" max="600" step="5" inputmode="numeric">
+          </label>
+        </div>
+
+        <label class="field">
+          <span class="field-label">模型显示名称</span>
+          <input id="settingModel" type="text" placeholder="mimo-v2.6-flash" spellcheck="false">
+          <span class="field-hint">只影响界面展示；实际模型由后端 <code>application.yaml</code> 的 <code>llm.model</code> 决定。</span>
+        </label>
+
+        <fieldset class="theme-choice">
+          <legend>界面主题</legend>
+          <label class="radio-card">
+            <input type="radio" name="theme" value="dark">
+            <span class="radio-card-body"><svg class="icon" aria-hidden="true"><use href="#i-moon"></use></svg><span><strong>深色</strong><small>控制台质感</small></span></span>
+          </label>
+          <label class="radio-card">
+            <input type="radio" name="theme" value="light">
+            <span class="radio-card-body"><svg class="icon" aria-hidden="true"><use href="#i-sun"></use></svg><span><strong>浅色</strong><small>清爽易读</small></span></span>
+          </label>
+        </fieldset>
+
+        <div class="danger-zone">
+          <div>
+            <strong>本地会话数据</strong>
+            <p>删除保存在浏览器 localStorage 中的全部对话，操作不可撤销。</p>
+          </div>
+          <button class="btn btn-danger-ghost" id="clearAllBtn" type="button">清空对话</button>
+        </div>
+      </div>
+
+      <footer class="modal-foot">
+        <button class="btn btn-ghost" id="resetSettingsBtn" type="button">恢复默认</button>
+        <div class="modal-foot-right">
+          <button class="btn btn-ghost" type="button" data-close-dialog>取消</button>
+          <button class="btn btn-primary" type="submit">保存设置</button>
+        </div>
+      </footer>
+    </form>
+  </dialog>
+
+  <!-- ================= 通用确认弹窗 ================= -->
+  <dialog class="modal modal-small" id="confirmDialog" aria-labelledby="confirmTitle">
+    <div class="modal-card">
+      <header class="modal-head">
+        <div>
+          <span class="panel-kicker danger-text">PLEASE CONFIRM</span>
+          <h2 id="confirmTitle">确认操作</h2>
+        </div>
+        <button class="icon-btn" id="confirmCloseBtn" type="button" aria-label="关闭确认框">
+          <svg class="icon" aria-hidden="true"><use href="#i-close"></use></svg>
+        </button>
+      </header>
+      <div class="modal-body">
+        <p class="confirm-message" id="confirmMessage"></p>
+      </div>
+      <footer class="modal-foot">
+        <div class="modal-foot-right">
+          <button class="btn btn-ghost" id="confirmCancelBtn" type="button">取消</button>
+          <button class="btn btn-danger" id="confirmOkBtn" type="button">确认删除</button>
+        </div>
+      </footer>
+    </div>
+  </dialog>
+
+  <!-- ================= 轻提示 ================= -->
+  <div class="toast" id="toast" role="status" aria-live="polite">
+    <span class="toast-icon" id="toastIcon"><svg class="icon" aria-hidden="true"><use href="#i-check"></use></svg></span>
+    <span id="toastText"></span>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/markdown.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+
+
+
+</body>
+</html>
