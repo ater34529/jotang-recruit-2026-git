@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<!-- namespace 必须是 Mapper 接口的全类名，一个字符都不能错，否则绑定不上 -->
+<mapper namespace="com.example.demoredis.mapper.NoteMapper">
+
+    <!-- 对应 Note selectById(Long id)
+         parameterType：入参类型；resultType：每一行结果封装成什么对象
+         #{id} 占位符会预编译成 ?，防 SQL 注入 -->
+    <select id="selectById" parameterType="java.lang.Long" resultType="com.example.demoredis.entity.Note">
+        select id, user_id, title, content, create_time
+        from notes
+        where id = #{id}
+    </select>
+
+    <!-- 对应 List<Note> selectAll()，无入参就不写 parameterType -->
+    <select id="selectAll" resultType="com.example.demoredis.entity.Note">
+        select id, user_id, title, content, create_time
+        from notes
+    </select>
+
+    <!-- 对应 int insert(Note note)
+         useGeneratedKeys + keyProperty="id"：插入后把数据库自增主键回填到 note.id -->
+    <insert id="insert" parameterType="com.example.demoredis.entity.Note" useGeneratedKeys="true" keyProperty="id">
+        insert into notes(user_id, title, content)
+        values (#{userId}, #{title}, #{content})
+    </insert>
+
+    <!-- 对应 int updateById(Note note)，用 note 里的字段，where 用 id -->
+    <update id="updateById" parameterType="com.example.demoredis.entity.Note">
+        update notes
+        set title = #{title}, content = #{content}
+        where id = #{id}
+    </update>
+
+    <!-- 对应 int deleteById(Long id) -->
+    <delete id="deleteById" parameterType="java.lang.Long">
+        delete from notes where id = #{id}
+    </delete>
+
+</mapper>

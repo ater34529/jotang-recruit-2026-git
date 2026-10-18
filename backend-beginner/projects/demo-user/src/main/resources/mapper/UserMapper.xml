@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- 声明MyBatis配置文件的DTD约束，校验XML格式合法性 -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<!-- 根标签namespace必须填对应Java Mapper接口的全类名，不能写错 -->
+<mapper namespace="com.example.demouser.mapper.UserMapper">
+
+    <!-- 1. 对应Mapper接口方法：int insertUser(User user)
+         useGeneratedKeys="true"：插入后自动把数据库自增的主键id回填到user对象里，后面插主表要用到user.id
+         keyProperty="id"：指定回填到实体类的id属性上
+    -->
+    <insert id="insertUser" parameterType="com.example.demouser.entity.User" useGeneratedKeys="true" keyProperty="id">
+        insert into user(name, password)
+        values (#{name}, #{password})
+    </insert>
+
+    <!-- 2. 对应Mapper接口方法：int insertNotes(Note note) -->
+    <insert id="insertNotes" parameterType="com.example.demouser.entity.Note" useGeneratedKeys="true" keyProperty="id">
+        insert into notes(user_id, content, title)
+        values (#{userId}, #{content}, #{title})
+    </insert>
+
+    <!-- 3. 对应Mapper接口方法：List<Note> selectNotesByUserId(Long userId)
+         单表查某人的所有笔记，每行装成一个Note对象 -->
+    <select id="selectNotesByUserId" parameterType="java.lang.Long" resultType="com.example.demouser.entity.Note">
+        select id, user_id, title, content, create_time
+        from notes
+        where user_id = #{userId}
+    </select>
+
+    <!-- 4. 对应Mapper接口方法：String selectPasswordByUsername(String username)
+         登录时单独查加密后的密码做校验，不返回给前端
+    -->
+    <select id="selectPasswordByUsername" parameterType="java.lang.String" resultType="java.lang.String">
+        select password from user where name = #{name}
+    </select>
+
+</mapper>

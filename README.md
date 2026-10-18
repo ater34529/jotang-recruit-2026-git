@@ -1,1 +1,0 @@
-# jotang-recruit-2026-git

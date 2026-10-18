@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: demo-redis
+  # MySQL：和 demo-user 连同一个库 JotangNote
+  datasource:
+    url: jdbc:mysql://localhost:3306/JotangNote?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  # Redis：注意 Boot 3/4 是 spring.data.redis，不是 spring.redis
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+# MyBatis：和 demo-user 一样，SQL 放 mapper 目录，下划线自动转驼峰
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
